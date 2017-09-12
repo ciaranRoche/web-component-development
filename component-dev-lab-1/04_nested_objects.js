@@ -12,7 +12,7 @@ var me = {
          bank : 'AIB'
 	},
 	male : true    
-}
+};
 
-console.log (me.name.first + ' banks with ' + me['bank_balance']['bank'])  
+console.log (me.name.first + ' banks with ' + me['bank_balance']['bank']);
 
