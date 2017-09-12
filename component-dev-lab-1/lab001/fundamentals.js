@@ -5,6 +5,13 @@ var aCar = {
 		model : 'Corolla',
 		engine : 1.8
 	},
+	previous_owners : [{
+		name : 'Pat smith',
+		address : '1 Main Street'
+	},{
+		name : 'Sheila Dwyer',
+		address : '2 High Street'
+	}],
 	registration : {
 		year : 10,
 		county : 'WD',
@@ -30,3 +37,8 @@ aCar.color = {
 console.log('It is a ' + aCar.color.exterior +
 	' car, '  + aCar.mileage + ' mileage, and ' +
 	aCar.color.interior.texture + ' interior' + ' with a shade of ' + aCar.color.interior.shade);
+
+console.log('First owner : ' + aCar.previous_owners[0].name );
+
+
+
