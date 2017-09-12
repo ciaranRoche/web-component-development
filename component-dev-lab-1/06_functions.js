@@ -1,7 +1,7 @@
 // Function declaration
 console.log('---------- Function declarations -----------------')
 function sayHello(person) {
-	if (person.male == true) {
+	if (person.male === true) {
        console.log('Hello Mr. ' + person.name.last )
     } else {
        console.log('Hello Mrs. ' + person.name.last )
@@ -16,35 +16,35 @@ var me = {
 	male : true    
 }
 // Calling/invoking a function
-sayHello(me)     // Hello Mr. O'Connor
+sayHello(me);   // Hello Mr. O'Connor
 // ========================================
 // 
-console.log('---------- Variable scopes -----------------')
-var foo1 = 2         // Global scope
+console.log('---------- Variable scopes -----------------');
+var foo1 = 2;        // Global scope
 function variableScopes() {
-   var foo2 = 12   
-   foo3 = foo2 + foo1
-   console.log('foo3 = ' + foo3)
+   var foo2 = 12;
+   foo3 = foo2 + foo1;
+   console.log('foo3 = ' + foo3);
    var foo3    // Declared; not initialized
 }
-variableScopes()
+variableScopes();
 //console.log(foo2)   // ERROR !!!!
 //=========================
 // 
 console.log('---------- Function expressions -----------------')
 var addMiddleName = function(person,middle_name) {
-    if (person.name.middle == undefined) {
+    if (person.name.middle === undefined) {
        person.name.middle = middle_name
     } else {
        person.name.middle += ' ' + middle_name
     }
 }
 
-addMiddleName(me,'Stephen')
-console.log(me.name)
+addMiddleName(me,'Stephen');
+console.log(me.name);
 //================================
 // Function result - the return value 
-console.log('---------- Function return -----------------')
+console.log('---------- Function return -----------------');
 var my_worth = {
 	current : [ { amount : 20.2, bank : 'AIB'}, 
 	            { amount : 5.1, bank : 'BoI'}  ],
@@ -60,10 +60,10 @@ var computeTotal = function (accounts) {
     }
     return total
 }
-console.log(computeTotal(my_worth))  // 45.5
+console.log(computeTotal(my_worth));  // 45.5
 // ===================================
 // 
-console.log('---------- Methods -----------------')
+console.log('---------- Methods -----------------');
 var person = {
 	name : {
        first : 'Joe',
@@ -76,7 +76,7 @@ var person = {
 		investment : [] 
         },   
     computeTotal : function () {
-		var total = 0.0
+		var total = 0.0;
 	    for (var type in this.finances) {
 	    	for (i = 0 ; i < this.finances[type].length ; i++) {
 	            total += this.finances[type][i].amount
@@ -85,7 +85,7 @@ var person = {
 	    return total
 	    },
 	addMiddleName : function(middle_name) {
-	    if (this.name.middle == undefined) {
+	    if (this.name.middle === undefined) {
 	       this.name.middle = middle_name
 	    } else {
 	       this.name.middle += ' ' + middle_name
