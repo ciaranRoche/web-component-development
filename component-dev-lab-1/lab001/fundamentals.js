@@ -12,6 +12,9 @@ var aCar = {
 		name : 'Sheila Dwyer',
 		address : '2 High Street'
 	}],
+	features : ['Parking assist',
+		'Alarm',
+		'Tow-bar'],
 	registration : {
 		year : 10,
 		county : 'WD',
@@ -40,5 +43,15 @@ console.log('It is a ' + aCar.color.exterior +
 
 console.log('First owner : ' + aCar.previous_owners[0].name );
 
-
-
+console.log('\nThe extra features of the car are : ');
+for (var i = 0 ; i < aCar.features.length ; i += 1) {
+	console.log(aCar.features[i]) ;
+};
+console.log('\nThe previous owners of the car are : ');
+for (var l=0; l <aCar.previous_owners.length; l++){
+	console.log(aCar.previous_owners[l].name)
+}
+console.log('\n');
+for (var p in aCar.type)  {
+	console.log(p.toUpperCase() + ' = ' + aCar.type[p] ) ;
+}
