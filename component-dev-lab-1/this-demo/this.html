@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+</head>
+  <body>
+    <div id="mount-point"></div>
+       <script>
+      var increment = 11;
+
+      var obj1 = {
+          increment : 2,
+        ary : [1,2,3,4],
+        bumpIt : function() {
+          var result = this.ary.map(function(element) {
+                console.log (element + ' ' + this.increment )
+                     return element + this.increment;
+            } );
+            return result ;
+        } 
+      }
+
+      console.log(obj1.bumpIt()) ;
+
+    </script>
+  </body>
+</html>
