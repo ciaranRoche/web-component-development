@@ -1,1 +1,1 @@
-import './ex01.js';
+import './ex02.js';
