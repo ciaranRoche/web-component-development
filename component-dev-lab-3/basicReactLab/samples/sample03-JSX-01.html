@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 
+  </head>
+  <body>
+    <div id="mount-point"></div>
+      <script src="./node_modules/react/dist/react.js"></script>
+      <script src="./node_modules/react-dom/dist/react-dom.js"></script>
+     <!-- Loading this code in the browser will throw an ERROR!!! -->
+      <script type="text/babel">
+        var root = 
+            <div className='myCSSstyle' >
+                <h1>Languages</h1>
+                <ul>
+                    <li>Ruby</li>
+                    <li>Javascript</li>
+                </ul>                                     
+            </div> ;
+        ReactDOM.render(root,  
+          document.getElementById('mount-point') );
+    </script>
+  </body>
+</html>
