@@ -35,4 +35,4 @@ var posts = [
 ];
 
 ReactDOM.render(
-  <HackerApp posts={posts}/>, document.getElementById('root'));
+  <HackerApp post={posts}/>, document.getElementById('root'));

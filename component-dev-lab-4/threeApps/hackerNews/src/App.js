@@ -50,7 +50,13 @@ class NewsItem extends Component {
 
 class NewsList extends Component {
   render() {
-    return null; //TODO
+    let posts = this.props.post.map(function(item){
+      return <NewsItem key={item.title} post={item} />
+    });
+    return (<div>
+        {posts}
+      </div>
+    ); 
   }
 }
 
@@ -62,7 +68,7 @@ class HackerApp extends Component {
           <div className='col-md-6 col-md-offset-3'>
             <div className='page-header'>
               <h1>Hacker News</h1>
-              <NewsList />
+              <NewsList post={this.props.post}/>
               <Form/>
             </div>
           </div>
