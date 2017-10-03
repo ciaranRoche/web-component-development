@@ -25,7 +25,15 @@ class Contact extends Component {
   render(){
     return (
       <tr>
-        {/* TODO */}
+        <td>
+          {this.props.contact.name}
+        </td>
+        <td>
+          {this.props.contact.address}
+        </td>
+        <td>
+          {this.props.contact.phone_number}
+        </td>
       </tr>
     )
   }
@@ -33,7 +41,9 @@ class Contact extends Component {
 
 class ContactList extends Component {
   render(){
-    let contactRows = null; //TODO
+    let contactRows = this.props.contacts.map(function(item){
+      return <Contact key={item.name} contact={item} />
+    }); 
     return (
       <tbody>
         {contactRows}
