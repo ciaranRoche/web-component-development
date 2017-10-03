@@ -1,21 +1,71 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
+
+class SelectBox extends Component {
   render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+    return(
+      <div className='col-md-10'>
+        <input type='text' placeholder='Search' />
+        Sort by:
+        <select>
+          <option value='name'>Alphabetical</option>
+          <option value='age'>Newest</option>
+        </select>
       </div>
     );
   }
 }
 
-export default App;
+class PhoneItem extends Component{
+  render(){
+    console.log(this.props.phone.image)
+    let link = `phones/${this.props.phone.id}`
+    let image = `/phoneSpecs/${this.props.phone.imageUrl}`
+    return(
+      <li className='thumbnail phone-listing'>
+        <a href={link} className='thumb'>
+          <img src={image} alt={this.props.phone.name} />
+        </a>
+        <a href={link}>{this.props.phone.name}</a>
+        <p>{this.props.phone.snippet}</p>
+      </li>
+    )
+  }
+}
+
+class FilteredPhoneList extends Component {
+  render() {
+    var displayedPhones = this.props.phones.map(function(phone){
+      return <PhoneItem key={phone.id} phone={phone} />;
+    });
+
+    return(
+      <div className='col-md-10'>
+        <ul className='phones'>
+          {displayedPhones}
+        </ul>
+      </div>
+    );
+  }
+}
+
+class PhoneCatalogueApp extends Component {
+  render() {
+    return (
+      <div className="view-container">
+        <div className="view-frame">
+          <div className="container-fluid">
+            <div className="row">
+              <SelectBox />
+              <FilteredPhoneList phones={this.props.phones}/>
+            </div> 
+          </div>                   
+        </div>
+      </div>
+      );
+    }
+  }
+
+
+export default PhoneCatalogueApp;

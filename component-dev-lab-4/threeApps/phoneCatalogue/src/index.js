@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import PhoneCatalogueApp from './App';
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
+import Phones from './Data';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+
+ReactDOM.render(<PhoneCatalogueApp phones={Phones} />, document.getElementById('root'));
+
