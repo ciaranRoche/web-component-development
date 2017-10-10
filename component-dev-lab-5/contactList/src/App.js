@@ -1,5 +1,5 @@
     import React from 'react';
-    import api from './text/stubAPI'
+    import api from './test/stubAPI'
 
     class ContactForm extends React.Component {
       render() {
@@ -87,7 +87,7 @@
           return (
                 <div>
                    <h1>Contact List.</h1>
-                   <ContactsTable contacts={this.props.contacts}  />
+                   <ContactsTable contacts={contacts}  />
                 </div>
           );
       }

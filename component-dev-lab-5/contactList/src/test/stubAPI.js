@@ -1,4 +1,4 @@
-import _ from 'loadash';
+import _ from 'lodash';
 
 class StubAPI{
   constructor(){
@@ -17,7 +17,7 @@ class StubAPI{
         'phone_number': '432-5832'
       }, {
         'name': 'Contact 4',
-        'address': '49 Upper Street',
+        'address': '40 Upper Street',
         'phone_number': '934-4290'
       }
     ];
