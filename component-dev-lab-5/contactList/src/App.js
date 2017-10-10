@@ -3,20 +3,46 @@
     import buttons from './config/buttonsConfig';
 
     class ContactForm extends React.Component {
+      state = {
+        name : '',
+        address : '',
+        phone_number : '',
+      }
+
+      handleAdd = (e) => {
+        e.preventDefault();
+        let name = this.state.name.trim();
+        let address = this.state.address.trim();
+        let phone_number = this.state.phone_number.trim()
+        if(!name || !address || !phone_number){
+          return;
+        }
+        api.add(name, address, phone_number);
+        this.props.updateHandler(this.props.contact);
+        this.setState({
+          name : '',
+          address : '',
+          phone_number : ''
+        })
+      }
+
+      handleName = (e) => this.setState({name: e.target.value});
+      
+      handleAddress = (e) => this.setState({address: e.target.value});
+
+      handlePhoneNum = (e) => this.setState({phone_number : e.target.value});
       render() {
+        let fields = [
+          <td key={'name'}><input type='text' className='form-control' value={this.state.name} onChange={this.handleName}/></td>,
+          <td key={'address'}><input type='text' className='form-control' value={this.state.address} onChange={this.handleAddress}/></td>,
+          <td key={'phone_number'}><input type='text' className='form-control' value={this.state.phone_number} onChange={this.handlePhoneNum}/></td>
+         
+        ];
         return (
           <tr>
+            {fields}
             <td>
-            <input type="text" className="form-control" />
-            </td>
-            <td>
-            <input type="text" className="form-control"/>
-            </td>
-            <td>
-            <input type="text" className="form-control" />
-            </td>
-            <td>
-            <input type="button" className="btn btn-primary" value="Add"/>
+            <input type="button" className="btn btn-primary" value="Add" onClick={this.handleAdd}/>
             </td>
           </tr>
           )
@@ -119,7 +145,7 @@
           return (
               <tbody >
                   {contactRows}
-                  <ContactForm />
+                  <ContactForm updateHandler={this.props.updateHandler}/>
               </tbody>
             ) ;
         }
