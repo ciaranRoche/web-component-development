@@ -60,10 +60,21 @@
 
       handlePhoneNumChange = (e) => this.setState({phone_number: e.target.value});
 
+      handleDelete = () => this.setState({status : 'delete'});
+
+      handleUndo = () => this.setState({status : ''})
+
+      handleConfirm = (e) => {
+        e.preventDefault();
+        api.delete(this.state.phone_number)
+        this.setState({status : ''})
+        this.props.updateHandler(this.props.contact);
+      }
+
       render() {
         let activeButtons = buttons.normal;
         let leftButtonHandler = this.handleEdit;
-        let rightButtonHandler = null;
+        let rightButtonHandler = this.handleDelete;
         let fields = [
           <td key={'name'} >{this.state.name}</td>,
           <td key={'address'} > {this.state.address}</td>,
@@ -78,6 +89,11 @@
             <td key={'address'}><input type='text' className='form-control' value={this.state.address} onChange={this.handleAddressChange}/></td>,
             <td key={'phone_number'}><input type='text' className='form-control' value={this.state.phone_number} onChange={this.handlePhoneNumChange}/></td>
           ];
+        }
+        if(this.state.status === 'delete'){
+          activeButtons = buttons.delete;
+          leftButtonHandler = this.handleUndo;
+          rightButtonHandler = this.handleConfirm;
         }
           return (
             <tr >
