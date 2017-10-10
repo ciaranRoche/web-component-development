@@ -1,5 +1,6 @@
     import React from 'react';
-    import api from './test/stubAPI'
+    import api from './test/stubAPI';
+    import buttons from './config/buttonsConfig';
 
     class ContactForm extends React.Component {
       render() {
@@ -23,23 +24,69 @@
     }
 
     class Contact extends React.Component {
+      state = {
+        status : '',
+        name: this.props.contact.name,
+        address : this.props.contact.address,
+        phone_number : this.props.contact.phone_number
+      };
+
+      handleEdit = () => this.setState({status : 'edit'});
+
+      handleSave = (e) => {
+        e.preventDefault();
+        let name = this.state.name.trim();
+        let address = this.state.address.trim();
+        let phone_number = this.state.address.trim();
+        if(!name || !address || !phone_number){
+          return;
+        }
+        this.setState({status : ''})
+        this.props.updateHandler(this.props.contact.phone_number,name,address,phone_number);
+      };
+
+      handleCancel = function(){
+        this.setState({
+          status : '',
+          name: this.props.contact.name,
+          address: this.props.contact.address,
+          phone_number : this.props.contact.phone_number
+        });
+      }.bind(this);
+
+      handleNameChange = (e) => this.setState({name : e.target.value});
+
+      handleAddressChange = (e) => this.setState({address : e.target.value});
+
+      handlePhoneNumChange = (e) => this.setState({phone_number: e.target.value});
+
       render() {
+        let activeButtons = buttons.normal;
+        let leftButtonHandler = this.handleEdit;
+        let rightButtonHandler = null;
+        let fields = [
+          <td key={'name'} >{this.state.name}</td>,
+          <td key={'address'} > {this.state.address}</td>,
+          <td key={'phone_number'}>{this.state.phone_number}</td>
+        ];
+        if(this.state.status === 'edit'){
+          activeButtons = buttons.edit;
+          leftButtonHandler = this.handleSave;
+          rightButtonHandler = this.handleCancel;
+          fields = [
+            <td key={'name'}><input type='text' className='form-control' value={this.state.name} onChange={this.handleNameChange}/></td>,
+            <td key={'address'}><input type='text' className='form-control' value={this.state.address} onChange={this.handleAddressChange}/></td>,
+            <td key={'phone_number'}><input type='text' className='form-control' value={this.state.phone_number} onChange={this.handlePhoneNumChange}/></td>
+          ];
+        }
           return (
             <tr >
+              {fields}
               <td>
-                 { this.props.contact.name }
-              </td>
-              <td>
-                 {this.props.contact.address }
-              </td>
-              <td>
-                   {this.props.contact.phone_number}
-              </td>
-              <td>
-                 <input type="button" className="btn btn-primary" value="Edit"/>
+                 <input type="button" className={'btn ' + activeButtons.leftButtonColor} value={activeButtons.leftButtonVal} onClick={leftButtonHandler}/>
               </td>  
               <td>
-                 <input type="button" className="btn btn-danger" value="Delete"/>
+                 <input type="button" className={'btn ' + activeButtons.rightButtonColor} value={activeButtons.rightButtonVal} onClick={rightButtonHandler}/>
               </td>                      
           </tr>
 
@@ -49,10 +96,10 @@
 
     class ContactList extends React.Component {
       render() {
-         var contactRows =   this.props.contacts.map(
-                function(c) {
-                     return <Contact key={c.phone_number} contact={c} />
-                });
+        let contactRows = this.props.contacts.map( (c) => {
+          return <Contact key={c.phone_number} contact={c}
+          updateHandler={this.props.updateHandler}/>
+        })
           return (
               <tbody >
                   {contactRows}
@@ -75,19 +122,25 @@
                   <th></th>
                   </tr>
                 </thead>
-                  <ContactList contacts={this.props.contacts}  />
+                  <ContactList contacts={this.props.contacts} 
+                    updateHandler={this.props.updateHandler} />
             </table>
             );
       }
     }
 
     class ContactsApp extends React.Component {
+      updateContact = (key,n,a,p) => {
+        api.update(key, n,a,p);
+        this.setState({});
+      };
       render() {
         let contacts = api.getAll();
           return (
                 <div>
                    <h1>Contact List.</h1>
-                   <ContactsTable contacts={contacts}  />
+                   <ContactsTable contacts={contacts} 
+                    updateHandler={this.updateContact} />
                 </div>
           );
       }
