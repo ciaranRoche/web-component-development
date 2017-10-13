@@ -65,6 +65,18 @@ class StubAPI{
     return false;
   }
 
+  downvote(id){
+    let index = _.findIndex(this.posts,
+    function(post){
+      return post.id === id;
+    });
+    if (index !== -1){
+      this.posts[index].upvotes -= 1;
+      return true;
+    }
+    return false;
+  }
+
   getPost(id) {
     let result = null;
     let index = _.findIndex(this.posts, function(post){

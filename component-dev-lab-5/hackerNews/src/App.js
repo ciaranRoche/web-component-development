@@ -30,6 +30,7 @@ class Form extends Component {
 
 class NewsItem extends Component {
   handleVote = () => this.props.upvoteHandler(this.props.post.id);
+  handleDownVote = () => this.props.downvoteHandler(this.props.post.id);
   render() {
       let lineStyle = {
            fontSize: '20px', 
@@ -45,6 +46,10 @@ class NewsItem extends Component {
       }
     return (
         <div >
+          <span className="glyphicon glyphicon-thumbs-down"
+            style={cursor}
+            onClick={this.handleDownVote}/>
+            <span style={{paddingLeft: '5px'}}/>
           <span className="glyphicon glyphicon-thumbs-up"
                 style={cursor} 
                 onClick={this.handleVote}/>
@@ -61,7 +66,7 @@ class NewsItem extends Component {
 class NewsList extends Component {
   render() {
     var items = this.props.posts.map((post,index) => {
-           return <NewsItem key={index} post={post} upvoteHandler={this.props.upvoteHandler} /> ;
+           return <NewsItem key={index} post={post} upvoteHandler={this.props.upvoteHandler} downvoteHandler={this.props.downvoteHandler}/> ;
        });
     return (
       <div>
@@ -76,6 +81,10 @@ class HackerApp extends Component {
     api.upvote(id);
     this.setState({});
   };
+  decreaseUpvote = (id) => {
+    api.downvote(id);
+    this.setState({});
+  };
   render() {
       let posts = _.sortBy(api.getAll(), function (post) {
         return -post.upvotes;
@@ -87,7 +96,8 @@ class HackerApp extends Component {
                 <div className="page-header">
                   <h1>Hacker News</h1>
                   <NewsList posts={posts}
-                   upvoteHandler={this.incrementUpvote} />
+                   upvoteHandler={this.incrementUpvote}
+                   downvoteHandler={this.decreaseUpvote} />
                   <Form />
            </div>
              </div>
