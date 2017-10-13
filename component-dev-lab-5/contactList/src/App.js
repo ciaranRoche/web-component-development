@@ -26,6 +26,8 @@
         })
       }
 
+      
+
       handleName = (e) => this.setState({name: e.target.value});
       
       handleAddress = (e) => this.setState({address: e.target.value});
