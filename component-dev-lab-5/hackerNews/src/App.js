@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
+import _ from 'lodash';
+import api from './test/stubAPI';
+
  
-class Form extends React.Component {
+class Form extends Component {
+  state = {title: '', link: ''};
   render() {
     return (
        <form style={{marginTop: '30px'}}>
@@ -9,12 +13,14 @@ class Form extends React.Component {
           <div className="form-group">
             <input type="text"
               className="form-control"
-              placeholder="Title"></input>
+              placeholder="Title"
+              value = {this.state.title}></input>
           </div>
           <div className="form-group">
             <input type="text"
             className="form-control"
-            placeholder="Link"></input>
+            placeholder="Link"
+            value={this.state.link}></input>
           </div>
           <button type="submit" className="btn btn-primary">Post</button>
         </form>
@@ -22,14 +28,15 @@ class Form extends React.Component {
     }
 }
 
-class NewsItem extends React.Component {
+class NewsItem extends Component {
+  handleVote = () => this.props.upvoteHandler(this.props.post.id);
   render() {
-      var divStyle = {
+      let lineStyle = {
            fontSize: '20px', 
            marginLeft: '10px' 
           };
-      var cursor = { cursor: 'pointer' } ;
-      var line ;
+      let cursor = { cursor: 'pointer' } ;
+      let line ;
       if (this.props.post.link ) {
          line = <a href={this.props.post.link} >
         {            this.props.post.title} </a> ;
@@ -39,9 +46,10 @@ class NewsItem extends React.Component {
     return (
         <div >
           <span className="glyphicon glyphicon-thumbs-up"
-                style={cursor} />
+                style={cursor} 
+                onClick={this.handleVote}/>
           {this.props.post.upvotes}
-          <span style={divStyle} >{line}<span>
+          <span style={lineStyle} >{line}<span>
               <a href={'#/posts/' + this.props.post.id }>Comments</a>
             </span>
           </span>
@@ -50,30 +58,37 @@ class NewsItem extends React.Component {
   }
 }
 
-class NewsList extends React.Component {
+class NewsList extends Component {
   render() {
-    var items = this.props.posts.map(function(post,index) {
-           return <NewsItem key={index} post={post} /> ;
-       } );
+    var items = this.props.posts.map((post,index) => {
+           return <NewsItem key={index} post={post} upvoteHandler={this.props.upvoteHandler} /> ;
+       });
     return (
       <div>
-            {items}
-            </div>
+        {items}
+      </div>
       );
   }
 }
 
-class HackerApp extends React.Component {
+class HackerApp extends Component {
+  incrementUpvote = (id) => {
+    api.upvote(id);
+    this.setState({});
+  };
   render() {
+      let posts = _.sortBy(api.getAll(), function (post) {
+        return -post.upvotes;
+      });
       return (
           <div className="container">
             <div className="row">
               <div className="col-md-6 col-md-offset-3">
-           <div className="page-header">
+                <div className="page-header">
                   <h1>Hacker News</h1>
-                  <NewsList posts={this.props.posts} />
+                  <NewsList posts={posts}
+                   upvoteHandler={this.incrementUpvote} />
                   <Form />
-                   {/* TODO */}
            </div>
              </div>
             </div>
