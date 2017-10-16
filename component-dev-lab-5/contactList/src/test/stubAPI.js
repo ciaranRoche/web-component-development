@@ -24,12 +24,20 @@ class StubAPI{
   }
 
   delete(k) {
-    let elements = _.remove(this.contacts, (contact) => contact.phone_number === k);
-    return elements;
+    let promise = new Promise((resolve, reject) => {
+      var elements = _.remove(this.contacts, function(contact){
+        return contact.phone_number === k;
+      });
+      setTimeout(() => resolve(elements), 1000)
+    });
+    return promise;
   }
 
   getAll() {
-    return this.contacts;
+    var promise = new Promise ((resolve, reject) => {
+      setTimeout(() => resolve(this.contacts), 1000)
+    });
+    return promise;
   }
 
   add(n,a,p) {
@@ -41,13 +49,20 @@ class StubAPI{
   }
 
   update(key, n, a, p){
-    var index = _.findIndex(this.contacts, (contact) => contact.phone_number === key);
-    if (index !== -1){
-      this.contacts.splice(index, 1, 
-      {name: n, address: a, phone_number: p});
-      return true;
-    }
-    return false;
+    let promise = new Promise ((resolve, reject) => {
+      setTimeout(() => {
+        let index = _.findIndex(this.contacts, function(contact){
+          return contact.phone_number === key;
+        });
+        if (index !== -1){
+          this.contacts.splice(index, 1, {name: n, address:a, phone_number: p});
+          resolve(true);
+        }else{
+          reject(key);
+        }
+      }, 1000);
+    });
+    return promise;
   }
 }
 

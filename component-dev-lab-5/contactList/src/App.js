@@ -26,8 +26,6 @@
         })
       }
 
-      
-
       handleName = (e) => this.setState({name: e.target.value});
       
       handleAddress = (e) => this.setState({address: e.target.value});
@@ -65,7 +63,7 @@
         e.preventDefault();
         let name = this.state.name.trim();
         let address = this.state.address.trim();
-        let phone_number = this.state.address.trim();
+        let phone_number = this.state.phone_number.trim();
         if(!name || !address || !phone_number){
           return;
         }
@@ -94,9 +92,9 @@
 
       handleConfirm = (e) => {
         e.preventDefault();
-        api.delete(this.state.phone_number)
+
         this.setState({status : ''})
-        this.props.updateHandler(this.props.contact);
+        this.props.deleteHandler(this.props.contact.phone_number)
       }
 
       render() {
@@ -142,12 +140,13 @@
       render() {
         let contactRows = this.props.contacts.map( (c) => {
           return <Contact key={c.phone_number} contact={c}
-          updateHandler={this.props.updateHandler}/>
+          updateHandler={this.props.updateHandler} deleteHandler={this.props.deleteHandler}/>
         })
           return (
               <tbody >
                   {contactRows}
-                  <ContactForm updateHandler={this.props.updateHandler}/>
+                  <ContactForm updateHandler={this.props.updateHandler}
+                  deleteHandler={this.props.deleteHandler}/>
               </tbody>
             ) ;
         }
@@ -167,24 +166,57 @@
                   </tr>
                 </thead>
                   <ContactList contacts={this.props.contacts} 
-                    updateHandler={this.props.updateHandler} />
+                    updateHandler={this.props.updateHandler}
+                    deleteHandler={this.props.deleteHandler} />
             </table>
             );
       }
     }
 
     class ContactsApp extends React.Component {
+      componentDidMount(){
+        let p = api.getAll();
+        p.then( response => {
+          localStorage.clear();
+          localStorage.setItem('contacts', JSON.stringify(response));
+          this.setState({});
+        });
+      }
+
       updateContact = (key,n,a,p) => {
-        api.update(key, n,a,p);
-        this.setState({});
+        api.update(key, n,a,p)
+        .then(response => {
+          return api.getAll()
+        })
+        .then(response => {
+          localStorage.clear();
+          localStorage.setItem('contacts', JSON.stringify(response));
+          this.setState({});
+        })
+        .catch(error => {console.log(`Update failed for ${error}`)})
       };
+
+      deleteContact = (k) => {
+        api.delete(k)
+        .then (response => {
+          return api.getAll()
+        })
+        .then( response => {
+          localStorage.clear();
+          localStorage.setItem('contacts', JSON.stringify(response));
+          this.setState({});
+        });
+      }
+      
       render() {
-        let contacts = api.getAll();
+        let contacts = localStorage.getItem('contacts') ?
+          JSON.parse(localStorage.getItem('contacts')) : [];
           return (
                 <div>
                    <h1>Contact List.</h1>
                    <ContactsTable contacts={contacts} 
-                    updateHandler={this.updateContact} />
+                    updateHandler={this.updateContact}
+                    deleteHandler={this.deleteContact} />
                 </div>
           );
       }
