@@ -17,8 +17,7 @@
         if(!name || !address || !phone_number){
           return;
         }
-        api.add(name, address, phone_number);
-        this.props.updateHandler(this.props.contact);
+        this.props.addHandler(this.props.phone_number,name,address,phone_number);
         this.setState({
           name : '',
           address : '',
@@ -140,13 +139,14 @@
       render() {
         let contactRows = this.props.contacts.map( (c) => {
           return <Contact key={c.phone_number} contact={c}
-          updateHandler={this.props.updateHandler} deleteHandler={this.props.deleteHandler}/>
+          updateHandler={this.props.updateHandler} deleteHandler={this.props.deleteHandler} addHandler={this.props.addHandler}/>
         })
           return (
               <tbody >
                   {contactRows}
                   <ContactForm updateHandler={this.props.updateHandler}
-                  deleteHandler={this.props.deleteHandler}/>
+                  deleteHandler={this.props.deleteHandler}
+                  addHandler={this.props.addHandler}/>
               </tbody>
             ) ;
         }
@@ -167,7 +167,8 @@
                 </thead>
                   <ContactList contacts={this.props.contacts} 
                     updateHandler={this.props.updateHandler}
-                    deleteHandler={this.props.deleteHandler} />
+                    deleteHandler={this.props.deleteHandler} 
+                    addHandler={this.props.addHandler}/>
             </table>
             );
       }
@@ -207,6 +208,20 @@
           this.setState({});
         });
       }
+
+      addContact = (k,n,a,p) => {
+        console.log(n,a,p)
+        api.add(n,a,p)
+        .then(response => {
+          console.log(response)
+          return api.getAll()
+        })
+        .then( response => {
+          localStorage.clear();
+          localStorage.setItem('contacts', JSON.stringify(response));
+          this.setState({});
+        });
+      }
       
       render() {
         let contacts = localStorage.getItem('contacts') ?
@@ -216,7 +231,8 @@
                    <h1>Contact List.</h1>
                    <ContactsTable contacts={contacts} 
                     updateHandler={this.updateContact}
-                    deleteHandler={this.deleteContact} />
+                    deleteHandler={this.deleteContact}
+                    addHandler={this.addContact} />
                 </div>
           );
       }

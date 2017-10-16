@@ -41,11 +41,13 @@ class StubAPI{
   }
 
   add(n,a,p) {
-    let len = this.contacts.length;
-    let newLen = this.contacts.push({
-      name: n, address: a, phone_number: p
-    });
-    return newLen > len;
+    let promise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+          this.contacts.push({name:n, address:a, phone_number:p})
+          resolve(true)
+      }, 1000)
+    })
+    return promise;
   }
 
   update(key, n, a, p){
