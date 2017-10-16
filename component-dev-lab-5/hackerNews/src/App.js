@@ -5,6 +5,21 @@ import api from './test/stubAPI';
  
 class Form extends Component {
   state = {title: '', link: ''};
+
+  handleItem = () => this.props.itemHandler();
+
+  handleAddItem = (e) => {
+    e.preventDefault()
+    api.add(this.state.title, this.state.link);
+    console.log('add handler clicked');
+    this.handleItem()
+  }
+
+  handleChange = (e) => {
+    const name = e.target.name;
+    this.setState({[name]: e.target.value});
+  }
+
   render() {
     return (
        <form style={{marginTop: '30px'}}>
@@ -14,15 +29,19 @@ class Form extends Component {
             <input type="text"
               className="form-control"
               placeholder="Title"
-              value = {this.state.title}></input>
+              name = 'title'
+              value = {this.state.title}
+              onChange={this.handleChange}></input>
           </div>
           <div className="form-group">
             <input type="text"
             className="form-control"
             placeholder="Link"
-            value={this.state.link}></input>
+            name = 'link'
+            value={this.state.link}
+            onChange={this.handleChange}></input>
           </div>
-          <button type="submit" className="btn btn-primary">Post</button>
+          <button type="submit" className="btn btn-primary" onClick={this.handleAddItem}>Post</button>
         </form>
         );
     }
@@ -85,6 +104,9 @@ class HackerApp extends Component {
     api.downvote(id);
     this.setState({});
   };
+  itemAdd = () => {
+    this.setState({});
+  }
   render() {
       let posts = _.sortBy(api.getAll(), function (post) {
         return -post.upvotes;
@@ -98,7 +120,7 @@ class HackerApp extends Component {
                   <NewsList posts={posts}
                    upvoteHandler={this.incrementUpvote}
                    downvoteHandler={this.decreaseUpvote} />
-                  <Form />
+                  <Form itemHandler={this.itemAdd}/>
            </div>
              </div>
             </div>
