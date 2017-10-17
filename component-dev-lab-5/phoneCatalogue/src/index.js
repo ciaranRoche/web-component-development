@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PhoneCatalogueApp from './App';
+import App from './App';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
-import Phones from  './Data';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router'
+import PhoneCatalogueApp from './App';
+import PhoneDetail from './phoneDetail';
 
 ReactDOM.render(
-  <PhoneCatalogueApp phones={Phones}/>,
-  document.getElementById('root')
-);
+  <Router history={browserHistory}>
+  <Route path="/" component={App}/>
+    <IndexRoute component={PhoneCatalogueApp}/>
+    <Route path="phones/:id" component={PhoneDetail}/>
+  <Route path="phones/" component={App}/>
+
+</Router>, document.getElementById('root'));

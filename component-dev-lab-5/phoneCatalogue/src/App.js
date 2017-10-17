@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import _ from 'lodash';
+import Phones from './Data';
+import {Link} from 'react-router';
 
 class SelectBox extends Component {
   handleChange = (e, type, value) => {
@@ -30,21 +32,22 @@ class SelectBox extends Component {
       }
 }
 
-class PhoneItem extends Component {
-    render() {
-       let url = process.env.PUBLIC_URL + '/phoneSpecs/' + this.props.phone.imageUrl;
-       return (
-          <li className="thumbnail phone-listing">
-              <a href={'/phones/' + this.props.phone.id} className="thumb">
-                    <img src={url} 
-                        alt={this.props.phone.name} /> 
-              </a>
-            <a href={'/phones/' + this.props.phone.id}> {this.props.phone.name}</a>
-            <p>{this.props.phone.snippet}</p>
-          </li>
-        ) ;
-     }
-}
+class PhoneItem extends React.Component {
+  render() {
+    return (
+      <li className="thumbnail phone-listing">
+        <Link to={'/phones/' + this.props.phone.id} className="thumb">
+          <img
+            src={"/phoneSpecs/" + this.props.phone.imageUrl}
+            alt={this.props.phone.name}/>
+        </Link>
+        <Link to={'/phones/' + this.props.phone.id}>
+          {this.props.phone.name}</Link>
+        <p>{this.props.phone.snippet}</p>
+      </li>
+    );
+  }
+};
 
 class FilteredPhoneList extends Component {
   render() {
@@ -73,11 +76,13 @@ class PhoneCatalogueApp extends Component {
   };
 
   render() {
-    console.log(`Criteria : Search = ${this.state.search} ; Sort = ${this.state.sort}`);
-    let list = this.props.phones.filter( (p) => {
-      return p.name.toLowerCase().search(this.state.search.toLowerCase()) !== -1 ;
+    let list = Phones.filter((p) => {
+      return p
+        .name
+        .toLowerCase()
+        .search(this.state.search.toLowerCase()) !== -1;
     });
-    let filteredList = _.sortBy(list, this.state.sort); 
+    let filteredList = _.sortBy(list, this.state.sort);
     return (
           <div className="view-container">
           <div className="view-frame">
@@ -93,4 +98,15 @@ class PhoneCatalogueApp extends Component {
   }
 }
 
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Phone Catalogue
+        </h1>
+        {this.props.children}
+      </div>
+    )
+  }
+};
 export default PhoneCatalogueApp;
