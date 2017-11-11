@@ -1,0 +1,4 @@
+exports.customers = []
+
+exports.products = {}
+
