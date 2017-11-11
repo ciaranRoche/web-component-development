@@ -1,0 +1,3 @@
+exports.customers = [];
+exports.products = {};
+
