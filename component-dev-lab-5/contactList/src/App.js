@@ -1,6 +1,7 @@
     import React from 'react';
     import api from './test/stubAPI';
     import buttons from './config/buttonsConfig';
+    import request from 'superagent';
 
     class ContactForm extends React.Component {
       state = {
@@ -176,44 +177,76 @@
 
     class ContactsApp extends React.Component {
       componentDidMount(){
-        let p = api.getAll();
-        p.then( response => {
-          localStorage.clear();
-          localStorage.setItem('contacts', JSON.stringify(response));
-          this.setState({});
-        });
+        request.get('http://localhost:3000/api/contacts').end((error, res) =>{
+          if(res){
+            let contacts = JSON.parse(res.text);
+            api.initialize(contacts);
+            localStorage.clear();
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            this.setState({});
+          }else{
+            console.log(error)
+          }
+        })
       }
 
       updateContact = (key,n,a,p) => {
-        api.update(key, n,a,p)
-        .then(response => {
-          return api.getAll()
+        request.put('http://localhost:3000/api/contacts/' + key)
+        .send({name: n, address: a, phone_number: p})
+        .set('Content-Type', 'application/json')
+        .end((err,res) => {
+          if(err || !res.ok){
+            alert('Error updating');
+          }else{
+            api.update(key, n,a,p)
+            .then(response => {
+              return api.getAll()
+            })
+            .then(response => {
+              localStorage.clear();
+              localStorage.setItem('contacts', JSON.stringify(response));
+              this.setState({});
+            })
+            .catch(error => {console.log(`Update failed for ${error}`)})
+          }
         })
-        .then(response => {
-          localStorage.clear();
-          localStorage.setItem('contacts', JSON.stringify(response));
-          this.setState({});
-        })
-        .catch(error => {console.log(`Update failed for ${error}`)})
       };
 
       deleteContact = (k) => {
-        api.delete(k)
-        .then (response => {
-          return api.getAll()
+        request.del('http://localhost:3000/api/contacts/' + k)
+        .end((err, res) => {
+          if(err || !res.ok){
+            alert('Error deleting contact');
+          }else{
+            api.delete(k)
+            .then (response => {
+              return api.getAll()
+            })
+            .then( response => {
+              localStorage.clear();
+              localStorage.setItem('contacts', JSON.stringify(response));
+              this.setState({});
+            });
+          }
         })
-        .then( response => {
-          localStorage.clear();
-          localStorage.setItem('contacts', JSON.stringify(response));
-          this.setState({});
-        });
       }
 
       addContact = (k,n,a,p) => {
-        console.log(n,a,p)
-        api.add(n,a,p)
+        request.post('http://localhost:3000/api/contacts').send({
+          name: n,
+          address: a,
+          phone_number: p
+        }).set('Content-Type', 'application/json')
+        .end((err, res) => {
+          if(err || !res.ok){
+            alert('Error adding contact');
+          }else{
+            let newContact = JSON.parse(res.text);
+            api.add(newContact.name,
+            newContact.address,
+            newContact.phone_number
+          )
         .then(response => {
-          console.log(response)
           return api.getAll()
         })
         .then( response => {
@@ -221,6 +254,8 @@
           localStorage.setItem('contacts', JSON.stringify(response));
           this.setState({});
         });
+          }
+        })
       }
       
       render() {

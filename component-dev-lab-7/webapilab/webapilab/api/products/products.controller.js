@@ -2,15 +2,19 @@ var datastore = require('../datastore');
 
 // Get all product
 exports.index = function (req, res) {
-  return res.json(200, datastore.products);
+  return res
+    .status(200)
+    .json(datastore.products);
 };
 
 // Get a single product
 exports.show = function (req, res) {
   if (datastore.products[req.params.code]) {
-    return res.json(datastore.products[req.params.code]);
+    return res
+      .status(200)
+      .json(datastore.products[req.params.code]);
   } else {
-    return res.send(404);
+    return res.sendStatus(404);
   }
 
 };
@@ -23,9 +27,11 @@ exports.create = function (req, res) {
     description: req.body.description
   };
   if (datastore.products[req.params.code]) {
-    return res.send(409, 'Id already exists');
+    return res.sendStatus(409, 'Id already exists');
   } else {
     datastore.products[req.params.code] = product;
-    return res.json(201, product);
+    return res
+      .status(201)
+      .json(product);
   }
 };
